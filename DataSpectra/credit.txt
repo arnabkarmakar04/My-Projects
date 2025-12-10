@@ -1,0 +1,15 @@
+==============================
+PROJECT ATTRIBUTIONS
+==============================
+
+This project uses the following third-party assets:
+
+- Icon: "CSV Icon"
+- Author: Mpanicon
+- Source: Flaticon.com
+- License: Flaticon Free License
+
+The icon is available at: https://www.flaticon.com/free-icon/csv_8242984
+
+Credit Line:
+Icon designed by Mpanicon from Flaticon
