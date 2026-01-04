@@ -1,0 +1,7 @@
+Flask
+google-generativeai
+python-dotenv
+Pillow
+flask-sqlalchemy
+flask-login
+werkzeug
