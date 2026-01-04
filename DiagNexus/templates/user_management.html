@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Portal - User Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .dropdown-menu { transition: all 0.2s ease-in-out; transform-origin: top right; transform: scale(0.95); opacity: 0; pointer-events: none; }
+        .dropdown-menu.active { transform: scale(1); opacity: 1; pointer-events: auto; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex">
+
+    <aside class="w-64 bg-gray-900 text-white flex flex-col hidden md:flex">
+        <div class="p-6 text-2xl font-bold tracking-wider border-b border-gray-800">
+            Diag<span class="text-blue-500">Nexus</span>
+        </div>
+        <nav class="flex-1 p-4 space-y-2">
+            <a href="/admin" class="block py-2.5 px-4 rounded hover:bg-gray-800 text-gray-400 transition">
+                <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+            </a>
+            <a href="/admin/users" class="block py-2.5 px-4 rounded bg-blue-600 text-white transition">
+                <i class="fas fa-users mr-2"></i> User Management
+            </a>
+            <a href="/admin/analytics" class="block py-2.5 px-4 rounded hover:bg-gray-800 text-gray-400 transition">
+                <i class="fas fa-chart-line mr-2"></i> Analytics
+            </a>
+        </nav>
+    </aside>
+
+    <div class="flex-1 flex flex-col h-screen overflow-hidden">
+        
+        <header class="bg-white shadow px-6 py-4 flex justify-between items-center">
+            <h2 class="text-xl font-bold text-gray-800">User Directory</h2>
+            <div class="relative">
+                <button onclick="document.getElementById('profileDropdown').classList.toggle('active')" class="flex items-center space-x-3 focus:outline-none hover:bg-gray-50 p-2 rounded-lg transition">
+                    <span class="text-sm font-bold text-gray-800">{{ user.username }}</span>
+                    <div class="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center border-2 border-white shadow-sm"><i class="fas fa-user-shield"></i></div>
+                </button>
+                <div id="profileDropdown" class="dropdown-menu absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 z-50">
+                    <div class="p-2"><a href="/logout" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg">Logout</a></div>
+                </div>
+            </div>
+        </header>
+
+        <main class="p-6 overflow-y-auto">
+            
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <div class="mb-6 bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded shadow-sm">
+                    {{ messages[0] }}
+                </div>
+                {% endif %}
+            {% endwith %}
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                    <h3 class="font-bold text-gray-800">Registered Accounts</h3>
+                    <span class="text-xs font-bold text-gray-500 uppercase bg-gray-200 px-2 py-1 rounded">{{ all_users|length }} Total</span>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm border-collapse">
+                        <thead class="bg-gray-50 text-gray-500 uppercase text-xs border-b">
+                            <tr>
+                                <th class="p-4">User</th>
+                                <th class="p-4">Role</th>
+                                <th class="p-4">Joined</th>
+                                <th class="p-4">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            {% for u in all_users %}
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="p-4">
+                                    <div class="font-bold text-gray-800">{{ u.username }}</div>
+                                    <div class="text-xs text-gray-500">{{ u.email }}</div>
+                                </td>
+                                <td class="p-4">
+                                    {% if u.is_admin %}
+                                        <span class="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs font-bold border border-purple-200">ADMIN</span>
+                                    {% else %}
+                                        <span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-bold border border-blue-100">PATIENT</span>
+                                    {% endif %}
+                                </td>
+                                <td class="p-4 text-gray-500">{{ u.created_at.strftime('%Y-%m-%d') }}</td>
+                                <td class="p-4">
+                                    {% if u.id != user.id %}
+                                        {% if u.is_admin %}
+                                            <a href="/admin/users/demote/{{ u.id }}" class="text-red-500 hover:text-red-700 font-bold text-xs border border-red-200 bg-red-50 px-3 py-1.5 rounded hover:bg-red-100 transition">
+                                                Revoke Admin
+                                            </a>
+                                        {% else %}
+                                            <a href="/admin/users/promote/{{ u.id }}" class="text-green-600 hover:text-green-800 font-bold text-xs border border-green-200 bg-green-50 px-3 py-1.5 rounded hover:bg-green-100 transition">
+                                                Promote to Admin
+                                            </a>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="text-gray-400 text-xs italic">Current User</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</body>
+</html>
