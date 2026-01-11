@@ -1,3 +1,0 @@
-Due to some reason CSV file of "Credit-card Fraud Detection" is not uploading on github, click on the link to download the CSV file.
-
-CSV link: https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
